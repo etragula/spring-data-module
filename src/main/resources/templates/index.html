@@ -26,22 +26,22 @@
         <br/>
         <sl-select class="label-on-left" name="categories" label="Categories" max-options-visible="10" pill multiple
                    clearable>
-            <sl-option value="It">It</sl-option>
-            <sl-option value="Horror">Horror</sl-option>
-            <sl-option value="Fantasy">Fantasy</sl-option>
-            <sl-option value="Classic">Classic</sl-option>
-            <sl-option value="Detective">Detective</sl-option>
-            <sl-option value="Biography">Biography</sl-option>
-            <sl-option value="Science_fiction">Science_fiction</sl-option>
+            <sl-option value="IT">It</sl-option>
+            <sl-option value="HORROR">Horror</sl-option>
+            <sl-option value="FANTASY">Fantasy</sl-option>
+            <sl-option value="CLASSIC">Classic</sl-option>
+            <sl-option value="DETECTIVE">Detective</sl-option>
+            <sl-option value="BIOGRAPHY">Biography</sl-option>
+            <sl-option value="SCIENCE_FICTION">Science fiction</sl-option>
         </sl-select>
         <sl-select class="label-on-left" name="languages" label="Languages" max-options-visible="10" pill multiple
                    clearable>
-            <sl-option value="Russian">Russian</sl-option>
-            <sl-option value="English">English</sl-option>
-            <sl-option value="German">German</sl-option>
-            <sl-option value="Spanish">Spanish</sl-option>
-            <sl-option value="Polish">Polish</sl-option>
-            <sl-option value="French">French</sl-option>
+            <sl-option value="RUSSIAN">Russian</sl-option>
+            <sl-option value="ENGLISH">English</sl-option>
+            <sl-option value="GERMAN">German</sl-option>
+            <sl-option value="SPANISH">Spanish</sl-option>
+            <sl-option value="POLISH">Polish</sl-option>
+            <sl-option value="FRENCH">French</sl-option>
         </sl-select>
         <br/>
         <sl-button type="submit" variant="primary" pill>Search</sl-button>
@@ -67,9 +67,9 @@
         <tr th:each="b : ${books}" th:field="${b}">
             <td th:text="${b.id}"></td>
             <td th:text="${b.name}"></td>
-            <td th:text="${b.author}"></td>
-            <td th:text="${b.category}"></td>
-            <td th:text="${b.language}"></td>
+            <td th:text="${b.author.name}"></td>
+            <td th:text="${b.category.getValue()}"></td>
+            <td th:text="${b.language.getValue()}"></td>
         </tr>
         </tbody>
     </table>

@@ -2,8 +2,10 @@ package ru.edu.springdata.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.edu.springdata.dao.BookDao;
+import ru.edu.springdata.dao.BookRepository;
 import ru.edu.springdata.entity.Book;
+import ru.edu.springdata.entity.Category;
+import ru.edu.springdata.entity.Language;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,51 +20,43 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class BookService {
 
     @Autowired
-    public BookDao bookDao;
+    public BookRepository bookRepository;
 
     public List<Book> getAllBooks() {
-        return bookDao.findAll();
+        return bookRepository.findAll();
     }
 
     public Optional<Book> getBookById(Long id) {
-        return bookDao.findById(id);
+        return bookRepository.findById(id);
     }
 
     public Book saveBook(Book book) {
-        return bookDao.findById(bookDao.save(book)).orElseThrow(() -> new RuntimeException("Book wasn't saved."));
-    }
-
-    public void updateBook(Book book) {
-        if (bookDao.update(book) == 0) {
-            throw new RuntimeException("Book wasn't updated. Maybe it doesn't exist");
-        }
+        return bookRepository.findById(bookRepository.save(book).getId()).orElseThrow(() -> new RuntimeException("Book wasn't saved."));
     }
 
     public void deleteBookById(Long id) {
-        if (bookDao.deleteById(id) == 0) {
-            throw new RuntimeException("Book wasn't deleted. Maybe it doesn't exist");
-        }
+        bookRepository.deleteById(id);
     }
 
     public List<Book> getBooksByFilter(String name, List<String> languages, List<String> categories) {
-        if (isBlank(name) && isEmpty(languages) && isEmpty(categories)) return bookDao.findAll();
+        if (isBlank(name) && isEmpty(languages) && isEmpty(categories)) return bookRepository.findAll();
 
         List<Book> result = new ArrayList<>();
 
         if (FALSE.equals(isEmpty(categories))) {
-            result = bookDao.findByCategories(categories.stream().map(String::toLowerCase).toList());
+            result = bookRepository.findAllByCategoryIn(categories.stream().map(Category::valueOf).toList());
             if (isEmpty(result)) return result;
         }
 
         if (FALSE.equals(isEmpty(languages))) {
-            List<Book> booksByLanguage = bookDao.findByLanguages(languages.stream().map(String::toLowerCase).toList());
+            List<Book> booksByLanguage = bookRepository.findAllByLanguageIn(languages.stream().map(Language::valueOf).toList());
             result = result.isEmpty() ? booksByLanguage : result;
             result.retainAll(booksByLanguage);
             if (isEmpty(result)) return result;
         }
 
         if (isNotBlank(name)) {
-            List<Book> booksByName = bookDao.findByName(name.toLowerCase());
+            List<Book> booksByName = bookRepository.findAllByNameContainingIgnoreCase(name.toLowerCase());
             result = result.isEmpty() ? booksByName : result;
             result.retainAll(booksByName);
         }

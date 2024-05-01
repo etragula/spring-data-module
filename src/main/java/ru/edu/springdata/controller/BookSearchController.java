@@ -25,7 +25,11 @@ public class BookSearchController {
             @RequestParam(required = false) List<String> languages,
             @RequestParam(required = false) List<String> categories
     ) {
-        List<Book> books = bookService.getBooksByFilter(name, languages, categories);
+        List<Book> books = bookService.getBooksByFilter(
+                name,
+                languages,
+                categories
+        );
         model.addAttribute("books", books);
         return "index";
     }

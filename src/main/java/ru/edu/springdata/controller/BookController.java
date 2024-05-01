@@ -34,7 +34,7 @@ public class BookController {
 
     @PatchMapping
     public void updateBook(@RequestBody Book book) {
-        bookService.updateBook(book);
+        bookService.saveBook(book);
     }
 
     @DeleteMapping("/{id}")

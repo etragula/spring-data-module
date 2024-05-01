@@ -1,24 +1,41 @@
 package ru.edu.springdata.entity;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "books")
 public class Book {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private String author;
-    private String language;
-    private String category; // history, it, health etc...
+
+    @Enumerated(EnumType.STRING)
+    private Language language;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "author_id",
+            referencedColumnName = "id",
+            nullable = false
+    )
+    private Author author;
 
     public Book() {
     }
 
-    public Book(Long id, String name, String author, String language, String category) {
-        this.id = id;
+    public Book(String name, Language language, Category category, Author author) {
         this.name = name;
-        this.author = author;
         this.language = language;
         this.category = category;
+        this.author = author;
     }
 
     public Long getId() {
@@ -37,28 +54,28 @@ public class Book {
         this.name = name;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Language language) {
         this.language = language;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     @Override
@@ -66,11 +83,11 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(id, book.id) && Objects.equals(name, book.name) && Objects.equals(author, book.author) && Objects.equals(language, book.language) && Objects.equals(category, book.category);
+        return Objects.equals(id, book.id) && Objects.equals(name, book.name) && language == book.language && category == book.category && Objects.equals(author.getId(), book.author.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, author, language, category);
+        return Objects.hash(id, name, language, category);
     }
 }
